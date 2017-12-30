@@ -13,37 +13,36 @@ namespace JSONParserLibrary
 {
     public class JSONParser
     {
-        private MyElement main;
+        private Part main;
 
-        public MyElement Data {
+        public Part Data {
             get { return main; }
         }
 
-        static Regex reg = new Regex(",");
-        static Regex cv_open = new Regex("\\[");
-        static Regex cv_close = new Regex("\\]");
-        static Regex reg_open = new Regex("{");
-        static Regex reg_close = new Regex("}");
-        static Regex reg_is_math = new Regex("^[, ]+\"[\\w ]+\":[ ]?[\"]?[\\w/ ]+[\"]?");
-        static Regex for_end = new Regex("(\"(?<name>[\\w ]+)\":[ ]?(?<skob>[\"]?)(?<value>[^\"]+)[\"]?)");
-        static Regex for_end_arr = new Regex("[, ]+(?<skob>[\"]?)(?<value>[^\"]+)");
-        static Regex for_next = new Regex("^[, ]+\"(?<name>[\\w ]+)\":[ ]?(?<body>.+)$");
-        static Regex for_next_arr = new Regex("[, ]+(?<body>.+)");
-        static Regex reg_cav = new Regex("\"");
-        static Regex reg_super_cymbols = new Regex("\"(?<symbols>[^\"]+)\"");
-        static Regex not_reg_super_cymbols = new Regex("[ ]?,[ ]?");
-        static Regex is_array = new Regex("^(?<is_arr>[{\\[]?)");
-        static Regex simple_element = new Regex("([{]+)|([}]+)|([\\[]+)|([\\]]+)");
+        private static Regex reg = new Regex(",");
+        private static Regex cv_open = new Regex("\\[");
+        private static Regex cv_close = new Regex("\\]");
+        private static Regex reg_open = new Regex("{");
+        private static Regex reg_close = new Regex("}");
+		//private static Regex reg_is_math = new Regex("^[, ]+\"[\\w ]+\":[ ]?[\"]?[\\w]+[\"]?");
+        private static Regex for_end = new Regex("(\"(?<name>[\\w ]+)\":[ ]?(?<skob>[\"]?)(?<value>[^\"]+)[\"]?)");
+       	private static Regex for_end_arr = new Regex("[, ]+(?<skob>[\"]?)(?<value>[^\"]+)");
+       	private static Regex for_next = new Regex("^[, ]+\"(?<name>[\\w ]+)\":[ ]?(?<body>.+)$");
+       	private static Regex for_next_arr = new Regex("[, ]+(?<body>.+)");
+       	private static Regex reg_cav = new Regex("\"");
+        private static Regex reg_super_cymbols = new Regex("\"(?<symbols>[^\"]+)\"");
+        private static Regex not_reg_super_cymbols = new Regex("[ ]?,[ ]?");
+        private static Regex is_array = new Regex("^(?<is_arr>[{\\[]?)");
+       	private static Regex simple_element = new Regex("([{]+)|([}]+)|([\\[]+)|([\\]]+)");
 
         public JSONParser(string JSONString) {
             main = ConvertFromJSON(JSONString);
         }
         public JSONParser() {
-            main = new MyElement("root");
-            main.MyType = MyElementType.structure;
+			main = new Part("root", null);
         }
         public string ConvertToJSON() {
-            return ConvertToJSON(main);
+			return "null";//ConvertToJSON(main);
         }
         public static string ConvertToJSON(MyElement dictionary) {
             string res = "";
@@ -84,8 +83,9 @@ namespace JSONParserLibrary
             else if (dictionary.MyType == MyElementType.structure) { return "{" + res + "}"; }
             else { return res; }
         }
-        public static MyElement ConvertFromJSON(string For_parse) {
-            MyElement el = new MyElement("root");
+        
+		public static Part ConvertFromJSON(string For_parse) {
+            Part el = new Part("root", null);
             Convert(ref el, ConvertSuperSymbols(For_parse));
             return el;
         }
@@ -111,14 +111,16 @@ namespace JSONParserLibrary
             val = Regex.Replace(val, "<vc_esolc>", "]");
             return val;
         }
-        private static void Convert(ref MyElement name, string For_parse) {
+        
+		private static void Convert(ref Part name, string For_parse) {
             bool array_is = true;
             if (is_array.Match(For_parse).Groups["is_arr"].Value == "{") {
                 array_is = false;
             }
 
-            name.MyType = array_is ? MyElementType.array : MyElementType.structure;
-            string for_parse = Regex.Replace(For_parse, "(^[{\\[]{1})|([}\\]]{1})$", ",");
+			if (array_is) { name.SetValue(new PartArray()); }
+			else { name.SetValue(new PartStruct()); }
+			string for_parse = Regex.Replace(For_parse, "(^[{\\[]{1})|([}\\]]{1})$", ",");
             int value = -1;
             List<string> array = new List<string>();
             foreach (Match m in reg.Matches(for_parse)) {
@@ -136,63 +138,72 @@ namespace JSONParserLibrary
                     }
                 }
             }
-            //array.ForEach(c => Console.WriteLine(c));
+			Console.WriteLine("start");
+            array.ForEach(c => Console.WriteLine(c));
+			Console.WriteLine("end");
             int CountArray = 0;
             foreach (string str in array) {
+				Match m;
                 if (array_is == true) {
-                    Match m;
                     if (!simple_element.IsMatch(str)) {
                         m = for_end_arr.Match(str);
                         string val = UnConvertSuperSymbols(m.Groups["value"].Value);
-                        MyElement new_el = new MyElement(CountArray.ToString());
-                        new_el.MySetValue(val);
-                        new_el.MyType = m.Groups["skob"].Value == "" ? MyElementType.nstr : MyElementType.str;
-                        name.Add(new_el);
+						Part new_el;
+						if (m.Groups["skob"].Value == "") {
+							new_el = new Part(CountArray.ToString(), name, new PartNotString(val));
+						}
+						else {
+							new_el = new Part(CountArray.ToString(), name, new PartString(val));
+						}
+						name.Value.AddPart(new_el);
                     }
                     else {
                         m = for_next_arr.Match(str);
-                        MyElement element = new MyElement(CountArray.ToString());
+                        Part element = new Part(CountArray.ToString(), name);
                         Convert(ref element, m.Groups["body"].Value);
-                        name.Add(element);
+                        name.Value.AddPart(element);
                     }
                     CountArray++;
                 }
                 else {
-                    if (reg_is_math.IsMatch(str)) {
-                        foreach (Match m in for_end.Matches(str)) {
-                            string val = UnConvertSuperSymbols(m.Groups["value"].Value);
-                            MyElement new_el = new MyElement(m.Groups["name"].Value);
-                            new_el.MySetValue(val);
-                            new_el.MyType = m.Groups["skob"].Value == "" ? MyElementType.nstr : MyElementType.str;
-                            name.Add(new_el);
-                        }
+                    if (!simple_element.IsMatch(str)) {
+						m = for_end.Match(str);
+                        string val = UnConvertSuperSymbols(m.Groups["value"].Value);
+						Part new_el;
+						if (m.Groups["skob"].Value == "") {
+							new_el = new Part(m.Groups["name"].Value, name, new PartNotString(val));
+						}
+						else {
+							new_el = new Part(m.Groups["name"].Value, name, new PartString(val));
+						}
+                        name.Value.AddPart(new_el);
                     }
                     else {
-                        foreach (Match m in for_next.Matches(str)) {
-                            MyElement element = new MyElement(m.Groups["name"].Value);
-                            Convert(ref element, m.Groups["body"].Value);
-                            name.Add(element);
-                        }
+						m = for_next.Match(str);
+                        Part element = new Part(m.Groups["name"].Value, name);
+                        Convert(ref element, m.Groups["body"].Value);
+                        name.Value.AddPart(element);
                     }
                 }
             }
         }
-        public MyElement this[string index] {
-            get {
-                string[] elements = index.Split('.');
-                MyElement res = main;
-                for (int i = 0; i < elements.Length; i++) {
-                    try { 
-                        res = (from k in res.Elements()
-                               where k.Attribute("name").Value == elements[i]
-                               select k).First() as MyElement;
-                    }
-                    catch (InvalidOperationException err) {
-                        throw new FielNotFound(elements[i]);
-                    }
-                }
-                return res;
-            }
-        }
+
+        //public MyElement this[string index] {
+        //    get {
+        //        string[] elements = index.Split('.');
+        //        MyElement res = main;
+        //        for (int i = 0; i < elements.Length; i++) {
+        //            try { 
+        //                res = (from k in res.Elements()
+        //                       where k.Attribute("name").Value == elements[i]
+        //                       select k).First() as MyElement;
+        //            }
+        //            catch (InvalidOperationException err) {
+        //                throw new FielNotFound(elements[i]);
+        //            }
+        //        }
+        //        return res;
+        //    }
+        //}
     }
 }
