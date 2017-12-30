@@ -52,6 +52,7 @@
     <Compile Include="Parts\PartNotString.cs" />
     <Compile Include="Parts\PartStruct.cs" />
     <Compile Include="Parts\PartArray.cs" />
+    <Compile Include="Parts\IToJSON.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Parts\" />

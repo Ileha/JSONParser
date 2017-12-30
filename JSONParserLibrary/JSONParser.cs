@@ -19,6 +19,9 @@ namespace JSONParserLibrary
             get { return main; }
         }
 
+		private Type type_struct = typeof(PartStruct);
+		private Type type_array = typeof(PartArray);
+
         private static Regex reg = new Regex(",");
         private static Regex cv_open = new Regex("\\[");
         private static Regex cv_close = new Regex("\\]");
@@ -42,7 +45,7 @@ namespace JSONParserLibrary
 			main = new Part("root", null);
         }
         public string ConvertToJSON() {
-			return "null";//ConvertToJSON(main);
+			return main.Value.ToJSON();
         }
         public static string ConvertToJSON(MyElement dictionary) {
             string res = "";
@@ -138,9 +141,9 @@ namespace JSONParserLibrary
                     }
                 }
             }
-			Console.WriteLine("start");
-            array.ForEach(c => Console.WriteLine(c));
-			Console.WriteLine("end");
+			//Console.WriteLine("start");
+   			//array.ForEach(c => Console.WriteLine(c));
+			//Console.WriteLine("end");
             int CountArray = 0;
             foreach (string str in array) {
 				Match m;
@@ -188,22 +191,36 @@ namespace JSONParserLibrary
             }
         }
 
-        //public MyElement this[string index] {
-        //    get {
-        //        string[] elements = index.Split('.');
-        //        MyElement res = main;
-        //        for (int i = 0; i < elements.Length; i++) {
-        //            try { 
-        //                res = (from k in res.Elements()
-        //                       where k.Attribute("name").Value == elements[i]
-        //                       select k).First() as MyElement;
-        //            }
-        //            catch (InvalidOperationException err) {
-        //                throw new FielNotFound(elements[i]);
-        //            }
-        //        }
-        //        return res;
-        //    }
-        //}
+        public Part this[string index] {
+            get {
+                string[] elements = index.Split('.');
+                Part res = main;
+                for (int i = 0; i < elements.Length; i++) {
+					//Console.WriteLine("element: {0} - ", elements[i]);
+					try {
+						if (res.Value.GetType() == type_array)
+						{
+							res = res.Value.GetPart(System.Convert.ToInt32(elements[i]));
+						}
+						else if (res.Value.GetType() == type_struct)
+						{
+							res = res.Value.GetPart(elements[i]);
+						}
+						else
+						{
+							throw new FielNotFound(elements[i]); ;
+						}
+
+					}
+					catch (FielNotFound err2) {
+						throw err2;
+					}
+					catch (Exception err) {
+                        throw new FielNotFound(elements[i]);
+                    }
+                }
+                return res;
+            }
+        }
     }
 }

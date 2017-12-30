@@ -1,7 +1,7 @@
 ﻿using System;
 namespace JSONParserLibrary
 {
-	public class Part
+	public class Part : IToJSON
 	{
 		private string _name;
 		private IPartValue _value;

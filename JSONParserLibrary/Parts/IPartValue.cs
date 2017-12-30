@@ -1,7 +1,7 @@
 ﻿using System;
 namespace JSONParserLibrary
 {
-	public interface IPartValue
+	public interface IPartValue : IToJSON
 	{
 		string value { get; }
 		void SetValue(object _value);
@@ -12,7 +12,5 @@ namespace JSONParserLibrary
 		void RemovePart(int index);
 		Part GetPart(int index);
 		int Count { get; }
-
-		string ToJSON();
 	}
 }
