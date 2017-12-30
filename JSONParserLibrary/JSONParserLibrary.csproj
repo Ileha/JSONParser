@@ -46,6 +46,15 @@
     <Compile Include="MyElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strings\StringBuilder.cs" />
+    <Compile Include="Parts\Part.cs" />
+    <Compile Include="Parts\IPartValue.cs" />
+    <Compile Include="Parts\PartString.cs" />
+    <Compile Include="Parts\PartNotString.cs" />
+    <Compile Include="Parts\PartStruct.cs" />
+    <Compile Include="Parts\PartArray.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Parts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
