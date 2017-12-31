@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using JSONParserLibrary.Strings;
 using JSONParserLibrary.Exeptions;
 using System.Xml.Linq;
-using System.Xml;
 
 namespace JSONParserLibrary
 {
@@ -27,7 +23,6 @@ namespace JSONParserLibrary
         private static Regex cv_close = new Regex("\\]");
         private static Regex reg_open = new Regex("{");
         private static Regex reg_close = new Regex("}");
-		//private static Regex reg_is_math = new Regex("^[, ]+\"[\\w ]+\":[ ]?[\"]?[\\w]+[\"]?");
         private static Regex for_end = new Regex("(\"(?<name>[\\w ]+)\":[ ]?(?<skob>[\"]?)(?<value>[^\"]+)[\"]?)");
        	private static Regex for_end_arr = new Regex("[, ]+(?<skob>[\"]?)(?<value>[^\"]+)");
        	private static Regex for_next = new Regex("^[, ]+\"(?<name>[\\w ]+)\":[ ]?(?<body>.+)$");
@@ -47,46 +42,6 @@ namespace JSONParserLibrary
         public string ConvertToJSON() {
 			return main.Value.ToJSON();
         }
-        public static string ConvertToJSON(MyElement dictionary) {
-            string res = "";
-            int count = dictionary.Elements().Count();
-            foreach (XElement el in dictionary.Elements()) {
-                count--;
-                MyElement current = el as MyElement;
-                if (current.MyType == MyElementType.str) {
-                    if (dictionary.MyType != MyElementType.array) { 
-                        res += "\"" + current.name + "\": \"" + current.Value + "\"";
-                    }
-                    else {
-                        res += "\"" + current.Value + "\"";
-                    }
-                }
-                else if (current.MyType == MyElementType.nstr) {
-                    if (dictionary.MyType != MyElementType.array) { 
-                        res += "\"" + current.name + "\": " + current.Value;
-                    }
-                    else {
-                        res += current.Value;
-                    }
-                }
-                else {
-                    if (dictionary.MyType != MyElementType.array) { 
-                        res += "\""+current.name+"\": "+ConvertToJSON(current);
-                    }
-                    else {
-                        res += ConvertToJSON(current);
-                    }
-                }
-                if (count != 0) { 
-                    res += ", ";
-                }
-            }
-
-            if (dictionary.MyType == MyElementType.array) { return "[" + res + "]"; }
-            else if (dictionary.MyType == MyElementType.structure) { return "{" + res + "}"; }
-            else { return res; }
-        }
-        
 		public static Part ConvertFromJSON(string For_parse) {
             Part el = new Part("root", null);
             Convert(ref el, ConvertSuperSymbols(For_parse));
