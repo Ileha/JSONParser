@@ -40,10 +40,10 @@ output:
 101101
 */
 ```
-```csPart``` you can get from field ```cspars.Data;```  
+```Part``` you can get from field ```pars.Data```  
 
 #### For parsing to json format
-if you use ```csJSONParser``` you should invoke method ```csConvertToJSON()```. Also you can use ```csPart``` so you should invoke ```cspart.Value.ToJSON()```.
+if you use ```JSONParser``` you should invoke method ```ConvertToJSON()```. Also you can use ```Part``` so you should invoke ```part.Value.ToJSON()```.
 
 #### Part
 Name            | Description                                            |
