@@ -40,7 +40,25 @@ output:
 101101
 */
 ```
-```csPart``` you can get from field ```cspars.Data;```  
+```csPart``` you can get from field ```cspars.Data;``` 
+#### Create object from code
+For construct ```JSONParser``` from code you should use code like this
+```cs
+JSONParser pars = new JSONParser();
+	pars.Data.SetValue(
+		new PartStruct(new Part("firstName",new PartString("Иван")), 
+		new Part("lastName", new PartString("Иванов")), 
+		new Part("address", new PartStruct(
+			new Part("streetAddress", new PartString("Московское ш., 101, кв.101")),
+			new Part("city", new PartString("Ленинград")),
+			new Part("postalCode", new PartNotString("101101"))
+		)),
+		new Part("phoneNumbers", new PartArray(
+			new Part("0", new PartString("812 123-1234")),
+			new Part("1", new PartString("916 123-4567"))
+		))
+));
+``` 
 
 #### For parsing to json format
 if you use ```csJSONParser``` you should invoke method ```csConvertToJSON()```. Also you can use ```csPart``` so you should invoke ```cspart.Value.ToJSON()```.

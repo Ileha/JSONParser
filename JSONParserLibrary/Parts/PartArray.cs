@@ -4,9 +4,14 @@ using System.Collections.Generic;
 namespace JSONParserLibrary {
 	public class PartArray : IPartValue {
 		private List<Part> container;
+		private Part MyPart;
 
-		public PartArray() {
+		public PartArray(params Part[] contain) {
 			container = new List<Part>();
+			for (int i = 0; i < contain.Length; i++) {
+				contain[i].ChangeName(i.ToString());
+				container.Add(contain[i]);
+			}
 		}
 
 		public int Count { get { return container.Count; } }
@@ -15,6 +20,7 @@ namespace JSONParserLibrary {
 
 		public void AddPart(Part element) {
 			container.Add(element);
+			element.ChangeParent(MyPart);
 		}
 
 		public Part GetPart(int index) {
@@ -23,6 +29,11 @@ namespace JSONParserLibrary {
 
 		public Part GetPart(string name) {
 			throw new NotImplementedException();
+		}
+
+		public void OnAddingToPart(Part master) {
+			MyPart = master;
+			container.ForEach((obj) => obj.ChangeParent(master));
 		}
 
 		public void RemovePart(int index) {

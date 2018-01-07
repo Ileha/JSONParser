@@ -7,9 +7,13 @@ namespace JSONParserLibrary
 	public class PartStruct : IPartValue
 	{
 		private List<Part> container;
+		private Part MyPart;
 
-		public PartStruct() {
+		public PartStruct(params Part[] contain) {
 			container = new List<Part>();
+			foreach (Part part in contain) {
+				container.Add(part);
+			}
 		}
 
 		public int Count { get { throw new NotImplementedException(); } }
@@ -18,6 +22,7 @@ namespace JSONParserLibrary
 
 		public void AddPart(Part element) {
 			container.Add(element);
+			element.ChangeParent(MyPart);
 		}
 
 		public Part GetPart(int index)
@@ -29,6 +34,11 @@ namespace JSONParserLibrary
 			return (from t in container
 					where t.Name == name
 			        select t).First();
+		}
+
+		public void OnAddingToPart(Part master) {
+			MyPart = master;
+			container.ForEach((obj) => obj.ChangeParent(master));
 		}
 
 		public void RemovePart(int index)

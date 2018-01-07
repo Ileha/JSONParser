@@ -11,6 +11,7 @@ namespace JSONParserLibrary
 		Part GetPart(string name);
 		void RemovePart(int index);
 		Part GetPart(int index);
+		void OnAddingToPart(Part master);
 		int Count { get; }
 	}
 }

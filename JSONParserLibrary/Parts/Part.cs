@@ -11,22 +11,31 @@ namespace JSONParserLibrary
 		public IPartValue Value { get { return _value; } }
 		public Part Parent { get { return _parent; } }
 
-		public Part(string name, Part parent) {
+		public Part(string name) {
 			_name = name;
-			_parent = parent;
 		}
-
-		public Part(string name, Part parent ,IPartValue value) {
+		//public Part(string name, Part parent) {
+		//	_name = name;
+		//	_parent = parent;
+		//}
+		public Part(string name, IPartValue value) {
 			_name = name;
 			_value = value;
-			_parent = parent;
+			_value.OnAddingToPart(this);
 		}
+		//public Part(string name, Part parent ,IPartValue value) {
+		//	_name = name;
+		//	_value = value;
+		//	_parent = parent;
+		//	_value.OnAddingToPart(this);
+		//}
 
 		public void ChangeName(string new_name) {
 			_name = new_name;
 		}
 		public void SetValue(IPartValue new_value) {
 			_value = new_value;
+			_value.OnAddingToPart(this);
 		}
 		public void ChangeParent(Part new_parent)
 		{
