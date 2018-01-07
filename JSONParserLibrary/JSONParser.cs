@@ -37,13 +37,13 @@ namespace JSONParserLibrary
             main = ConvertFromJSON(JSONString);
         }
         public JSONParser() {
-			main = new Part("root", null);
+			main = new Part("root");
         }
         public string ConvertToJSON() {
 			return main.Value.ToJSON();
         }
 		public static Part ConvertFromJSON(string For_parse) {
-            Part el = new Part("root", null);
+            Part el = new Part("root");
             Convert(ref el, ConvertSuperSymbols(For_parse));
             return el;
         }
@@ -108,16 +108,19 @@ namespace JSONParserLibrary
                         string val = UnConvertSuperSymbols(m.Groups["value"].Value);
 						Part new_el;
 						if (m.Groups["skob"].Value == "") {
-							new_el = new Part(CountArray.ToString(), name, new PartNotString(val));
+							//new_el = new Part(CountArray.ToString(), name, new PartNotString(val));
+							new_el = new Part(CountArray.ToString(), new PartNotString(val));
 						}
 						else {
-							new_el = new Part(CountArray.ToString(), name, new PartString(val));
+							//new_el = new Part(CountArray.ToString(), name, new PartString(val));
+							new_el = new Part(CountArray.ToString(), new PartString(val));
 						}
 						name.Value.AddPart(new_el);
                     }
                     else {
                         m = for_next_arr.Match(str);
-                        Part element = new Part(CountArray.ToString(), name);
+                        //Part element = new Part(CountArray.ToString(), name);
+						Part element = new Part(CountArray.ToString());
                         Convert(ref element, m.Groups["body"].Value);
                         name.Value.AddPart(element);
                     }
@@ -129,16 +132,19 @@ namespace JSONParserLibrary
                         string val = UnConvertSuperSymbols(m.Groups["value"].Value);
 						Part new_el;
 						if (m.Groups["skob"].Value == "") {
-							new_el = new Part(m.Groups["name"].Value, name, new PartNotString(val));
+							//new_el = new Part(m.Groups["name"].Value, name, new PartNotString(val));
+							new_el = new Part(m.Groups["name"].Value, new PartNotString(val));
 						}
 						else {
-							new_el = new Part(m.Groups["name"].Value, name, new PartString(val));
+							//new_el = new Part(m.Groups["name"].Value, name, new PartString(val));
+							new_el = new Part(m.Groups["name"].Value, new PartString(val));
 						}
                         name.Value.AddPart(new_el);
                     }
                     else {
 						m = for_next.Match(str);
-                        Part element = new Part(m.Groups["name"].Value, name);
+                        //Part element = new Part(m.Groups["name"].Value, name);
+						Part element = new Part(m.Groups["name"].Value);
                         Convert(ref element, m.Groups["body"].Value);
                         name.Value.AddPart(element);
                     }

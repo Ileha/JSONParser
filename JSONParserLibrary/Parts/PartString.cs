@@ -27,6 +27,8 @@ namespace JSONParserLibrary
 			throw new NotImplementedException();
 		}
 
+		public void OnAddingToPart(Part master) {}
+
 		public void RemovePart(int index)
 		{
 			throw new NotImplementedException();
