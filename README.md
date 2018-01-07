@@ -39,8 +39,8 @@ Console.WriteLine(part.Value.GetPart("address").Value.GetPart("postalCode").Valu
 output:
 101101
 */
-```
-```csPart``` you can get from field ```cspars.Data;``` 
+```  
+
 #### Create object from code
 For construct ```JSONParser``` from code you should use code like this
 ```cs
@@ -58,10 +58,11 @@ JSONParser pars = new JSONParser();
 			new Part("1", new PartString("916 123-4567"))
 		))
 ));
-``` 
+```  
+```Part``` you can get from field ```pars.Data```  
 
 #### For parsing to json format
-if you use ```csJSONParser``` you should invoke method ```csConvertToJSON()```. Also you can use ```csPart``` so you should invoke ```cspart.Value.ToJSON()```.
+if you use ```JSONParser``` you should invoke method ```ConvertToJSON()```. Also you can use ```Part``` so you should invoke ```part.Value.ToJSON()```.
 
 #### Part
 Name            | Description                                            |
