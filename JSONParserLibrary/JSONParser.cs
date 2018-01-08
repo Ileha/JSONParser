@@ -80,8 +80,11 @@ namespace JSONParserLibrary
 			else { name.SetValue(new PartStruct()); }
 			string for_parse = Regex.Replace(For_parse, "(^[{\\[]{1})|([}\\]]{1})$", ",");
             int value = -1;
-            List<string> array = new List<string>();
-            foreach (Match m in reg.Matches(for_parse)) {
+			//List<string> array = new List<string>()
+			MatchCollection collect = reg.Matches(for_parse);;
+			string[] array = new string[collect.Count];
+			int iterator = 0;
+            foreach (Match m in collect) {
                 if (value == -1) { value = m.Index; }
                 else {
                     string sub_str = for_parse.Substring(value, m.Index - value);
@@ -91,8 +94,10 @@ namespace JSONParserLibrary
                     int cv_close_count = cv_close.Matches(sub_str).Count;
                     int count = reg_cav.Matches(sub_str).Count;
                     if (fig_open == fig_close && cv_close_count == cv_open_count && count % 2 == 0) {
-                        array.Add(sub_str);
+						//array.Add(sub_str);
+						array[iterator] = sub_str;
                         value = m.Index;
+						iterator++;
                     }
                 }
             }
@@ -101,6 +106,7 @@ namespace JSONParserLibrary
 			//Console.WriteLine("end");
             int CountArray = 0;
             foreach (string str in array) {
+				if (str == null || str == "") { return; }
 				Match m;
                 if (array_is == true) {
                     if (!simple_element.IsMatch(str)) {
