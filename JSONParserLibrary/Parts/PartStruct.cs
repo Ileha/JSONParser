@@ -4,41 +4,48 @@ using System.Linq;
 
 namespace JSONParserLibrary
 {
-	public class PartStruct : IPartValue
+	public class PartStruct : IPart
 	{
-		private List<Part> container;
-		private Part MyPart;
+		private List<IPart> container;
+		private string _name;
+		public IPart _parent;
 
-		public PartStruct(params Part[] contain) {
-			container = new List<Part>();
-			foreach (Part part in contain) {
+		public PartStruct(string name, params IPart[] contain) {
+			this.name = name;
+			container = new List<IPart>();
+			foreach (IPart part in contain) {
 				container.Add(part);
+				part.parent = this;
 			}
 		}
 
 		public int Count { get { throw new NotImplementedException(); } }
+		public string name {
+			get { return _name; }
+			set { _name = value; }
+		}
+
+		public IPart parent {
+			get { return _parent; }
+			set { _parent = value; }
+		}
 
 		public string value { get { throw new NotImplementedException(); } }
 
-		public void AddPart(Part element) {
+		public void AddPart(IPart element) {
 			container.Add(element);
-			element.ChangeParent(MyPart);
+			element.parent = this;
 		}
 
-		public Part GetPart(int index)
+		public IPart GetPart(int index)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Part GetPart(string name) {
+		public IPart GetPart(string name) {
 			return (from t in container
-					where t.Name == name
+					where t.name == name
 			        select t).First();
-		}
-
-		public void OnAddingToPart(Part master) {
-			MyPart = master;
-			container.ForEach((obj) => obj.ChangeParent(master));
 		}
 
 		public void RemovePart(int index)
@@ -48,7 +55,7 @@ namespace JSONParserLibrary
 
 		public void RemovePart(string name) {
 			container.Remove((from t in container
-							  where t.Name == name
+							  where t.name == name
 							  select t).First());
 		}
 
@@ -57,8 +64,12 @@ namespace JSONParserLibrary
 		}
 
 		public string ToJSON() {
+			return string.Format("\"{0}\": {1}", _name, ValueToJSON());
+		}
+
+		public string ValueToJSON() {
 			string res = "";
-			for (int i = 0; i < container.Count; i++) {
+			for (int i = 0; i<container.Count; i++) {
 				if (i == container.Count - 1) {
 					res += container[i].ToJSON();
 				}

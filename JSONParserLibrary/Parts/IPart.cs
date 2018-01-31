@@ -1,17 +1,18 @@
 ﻿using System;
 namespace JSONParserLibrary
 {
-	public interface IPartValue : IToJSON
+	public interface IPart : IToJSON
 	{
+		string name { get; set; }
 		string value { get; }
+		IPart parent { get; set; }
 		void SetValue(object _value);
 
-		void AddPart(Part element);
+		void AddPart(IPart element);
 		void RemovePart(string name);
-		Part GetPart(string name);
+		IPart GetPart(string name);
+		IPart GetPart(int index);
 		void RemovePart(int index);
-		Part GetPart(int index);
-		void OnAddingToPart(Part master);
 		int Count { get; }
 	}
 }

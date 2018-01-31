@@ -3,34 +3,47 @@ using JSONParserLibrary.Exeptions;
 
 namespace JSONParserLibrary
 {
-	public class PartNotString : IPartValue
+	public class PartNotString : IPart
 	{
 		string res;
+		private string _name;
+		public IPart _parent;
 
-		public PartNotString(string val) {
+		public PartNotString(string name, string val) {
+            this.name = name;
 			res = val;
 		}
 
-		public int Count { get { throw new NotImplementedException(); } }
+		public int Count { get{ throw new NotImplementedException(); } }
+
+		public string name
+		{
+			get { return _name; }
+			set { _name = value; }
+		}
+
+		public IPart parent
+		{
+			get { return _parent; }
+			set { _parent = value; }
+		}
 
 		public string value { get { return res; } }
 
-		public void AddPart(Part element)
+		public void AddPart(IPart element)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Part GetPart(int index)
+		public IPart GetPart(int index)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Part GetPart(string name)
+		public IPart GetPart(string name)
 		{
 			throw new NotImplementedException();
 		}
-
-		public void OnAddingToPart(Part master) {}
 
 		public void RemovePart(int index)
 		{
@@ -59,7 +72,12 @@ namespace JSONParserLibrary
 		}
 
 		public string ToJSON() {
-			return string.Format("{0}", res);
+			return string.Format("\"{1}\": {0}", res, _name);
+		}
+
+		public string ValueToJSON()
+		{
+			return res;
 		}
 	}
 }
