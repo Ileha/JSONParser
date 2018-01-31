@@ -6,11 +6,13 @@ namespace JSONParserLibrary
 		private string _name;
 		public IPart _parent;
 
-		public string name {
+		public string name
+		{
 			get { return _name; }
 			set { _name = value; }
 		}
-		public IPart parent {
+		public IPart parent
+		{
 			get { return _parent; }
 			set { _parent = value; }
 		}

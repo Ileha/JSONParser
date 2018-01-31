@@ -17,6 +17,7 @@ namespace JSONParserLibrary {
 		public override int Count { get { return container.Count; } }
 
 		public override void AddPart(IPart element) {
+			element.name = container.Count.ToString();
 			container.Add(element);
 			element.parent = this;
 		}
