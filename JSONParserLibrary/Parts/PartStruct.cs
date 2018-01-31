@@ -6,76 +6,45 @@ namespace JSONParserLibrary
 {
 	public class PartStruct : IPart
 	{
-		private List<IPart> container;
-		private string _name;
-		public IPart _parent;
+		private Dictionary<string, IPart> container;
 
 		public PartStruct(string name, params IPart[] contain) {
 			this.name = name;
-			container = new List<IPart>();
+			container = new Dictionary<string, IPart>();
 			foreach (IPart part in contain) {
-				container.Add(part);
+				container.Add(part.name, part);
 				part.parent = this;
 			}
 		}
 
-		public int Count { get { throw new NotImplementedException(); } }
-		public string name {
-			get { return _name; }
-			set { _name = value; }
-		}
-
-		public IPart parent {
-			get { return _parent; }
-			set { _parent = value; }
-		}
-
-		public string value { get { throw new NotImplementedException(); } }
-
-		public void AddPart(IPart element) {
-			container.Add(element);
+		public override void AddPart(IPart element) {
+			container.Add(element.name, element);
 			element.parent = this;
 		}
 
-		public IPart GetPart(int index)
-		{
-			throw new NotImplementedException();
+		public override IPart GetPart(string name) {
+			return container[name];
 		}
 
-		public IPart GetPart(string name) {
-			return (from t in container
-					where t.name == name
-			        select t).First();
+		public override void RemovePart(string name) {
+			container.Remove(name);
 		}
 
-		public void RemovePart(int index)
-		{
-			throw new NotImplementedException();
+		public override string ToJSON() {
+			return string.Format("\"{0}\": {1}", name, ValueToJSON());
 		}
 
-		public void RemovePart(string name) {
-			container.Remove((from t in container
-							  where t.name == name
-							  select t).First());
-		}
-
-		public void SetValue(object _value) {
-			throw new NotImplementedException();
-		}
-
-		public string ToJSON() {
-			return string.Format("\"{0}\": {1}", _name, ValueToJSON());
-		}
-
-		public string ValueToJSON() {
+		public override string ValueToJSON() {
 			string res = "";
-			for (int i = 0; i<container.Count; i++) {
+			int i = 0;
+			foreach (IPart part in container.Values) {
 				if (i == container.Count - 1) {
-					res += container[i].ToJSON();
+					res += part.ToJSON();
 				}
 				else {
-					res += container[i].ToJSON()+", ";
+					res += part.ToJSON()+", ";
 				}
+				i++;
 			}
 			return "{"+res+"}";
 		}
