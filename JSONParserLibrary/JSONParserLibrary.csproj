@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exeptions\FielNotFound.cs" />
-    <Compile Include="Exeptions\OperationNotAllowed.cs" />
+    <Compile Include="Exceptions\FielNotFound.cs" />
+    <Compile Include="Exceptions\OperationNotAllowed.cs" />
+    <Compile Include="Exceptions\ParsError.cs" />
     <Compile Include="JSONParser.cs" />
+    <Compile Include="MyStack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parts\IPart.cs" />
     <Compile Include="Parts\PartString.cs" />
@@ -49,10 +51,15 @@
     <Compile Include="Parts\PartStruct.cs" />
     <Compile Include="Parts\PartArray.cs" />
     <Compile Include="Parts\IToJSON.cs" />
+    <Compile Include="Reactors\AbstractReactor.cs" />
+    <Compile Include="Reactors\Colon.cs" />
+    <Compile Include="Reactors\Comma.cs" />
+    <Compile Include="Reactors\FigureClose.cs" />
+    <Compile Include="Reactors\FigureOpen.cs" />
+    <Compile Include="Reactors\Quotes.cs" />
+    <Compile Include="Reactors\ReactorData.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Parts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -8,6 +8,9 @@ namespace JSONParserLibrary
 	{
 		private Dictionary<string, IPart> container;
 
+        public PartStruct() {
+            container = new Dictionary<string, IPart>();
+        }
 		public PartStruct(string name, params IPart[] contain) {
 			this.name = name;
 			container = new Dictionary<string, IPart>();
