@@ -16,7 +16,7 @@ namespace JSONParserLibrary.Reactors
         }
 
         public override void CreateInstanse(int index, ReactorData data) {
-            
+            data.Order.Push(new Comma() { _index = index });
         }
     }
 }

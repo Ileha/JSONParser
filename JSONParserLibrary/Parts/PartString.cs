@@ -1,5 +1,5 @@
 ﻿using System;
-using JSONParserLibrary.Exeptions;
+using JSONParserLibrary.Exceptions;
 
 namespace JSONParserLibrary
 {

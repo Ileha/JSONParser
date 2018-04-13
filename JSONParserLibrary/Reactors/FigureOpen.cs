@@ -13,10 +13,11 @@ namespace JSONParserLibrary.Reactors
         public FigureOpen() : base("{") {}
 
         public override void CreateInstanse(int index, ReactorData data)
-        {
-            data.Order.Push(new FigureOpen() { _index = index });
-            if (data.root != null) {
-                data.root = new PartStruct();
+		{
+            if (data.root.parent == null) {
+				PartStruct p = new PartStruct("root");
+				data.root.AddPart(p);
+				data.root = p;
             }
             else {
                 AbstractReactor r = data.Order.Pop();
@@ -27,10 +28,11 @@ namespace JSONParserLibrary.Reactors
                 r = data.Order.Pop();
                 if (r.React != "\"") { throw new ParsError("\""); }
                 int start = r.index;
-                PartStruct p = new PartStruct(data.data.Substring(start, stop-start));
+				PartStruct p = new PartStruct(data.data.Substring(start+1, (stop-start)-1));
                 data.root.AddPart(p);
                 data.root = p;
             }
+			data.Order.Push(new FigureOpen() { _index = index });
         }
 
         public override int index
