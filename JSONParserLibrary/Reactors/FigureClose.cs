@@ -37,7 +37,7 @@ namespace JSONParserLibrary.Reactors
 				}
 				else {
 					indexes[3] = r.index;
-					r = data.Order.Pop();
+                    while ((r = data.Order.Pop()).React != "\"") {}
 					indexes[2] = r.index;
 					r = data.Order.Pop();
 					r = data.Order.Pop();
