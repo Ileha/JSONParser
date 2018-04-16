@@ -12,7 +12,7 @@ namespace JSONParserLibrary
             string r = "{\"integerData\": 3, \"stringData\": \"StringValue\", \"foo\": [16, 2, 77, 40, 12071]}";
             IPart data;
 			JSONParser.Convert(out data, r);
-            Console.WriteLine(data.ToJSON());
+            Console.WriteLine(data.ValueToJSON());
 			Console.WriteLine();
 		}
 	}

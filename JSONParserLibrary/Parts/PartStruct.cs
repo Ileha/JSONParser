@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace JSONParserLibrary
 {
@@ -38,18 +39,18 @@ namespace JSONParserLibrary
 		}
 
 		public override string ValueToJSON() {
-			string res = "";
+			StringBuilder res = new StringBuilder().Append("{");
 			int i = 0;
 			foreach (IPart part in container.Values) {
 				if (i == container.Count - 1) {
-					res += part.ToJSON();
+					res.Append(part.ToJSON());
 				}
 				else {
-					res += part.ToJSON()+", ";
+					res.Append(part.ToJSON()).Append(", ");
 				}
 				i++;
 			}
-			return "{"+res+"}";
+			return res.Append("}").ToString();
 		}
 	}
 }

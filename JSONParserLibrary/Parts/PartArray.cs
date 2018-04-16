@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace JSONParserLibrary {
 	public class PartArray : IPart {
@@ -35,17 +36,17 @@ namespace JSONParserLibrary {
 		}
 
 		public override string ValueToJSON() {
-			string res = "";
+            StringBuilder res = new StringBuilder().Append("[");
 			for (int i = 0; i<container.Count; i++) {
 				if (i == container.Count - 1) {
-					res += container[i].ValueToJSON();
+					res.Append(container[i].ValueToJSON());
 				}
 				else
 				{
-					res += container[i].ValueToJSON() + ", ";
+					res.Append(container[i].ValueToJSON()).Append(", ");
 				}
 			}
-			return string.Format("[{0}]", res);
+            return res.Append("]").ToString();
 		}
 	}
 }
