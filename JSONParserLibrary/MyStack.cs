@@ -16,9 +16,9 @@ namespace JSONParserLibrary
             //k.Peek
         }
 
-        public MyQueue(Enemy<T> first) {
-            up = first;
-        }
+        //public MyQueue(Enemy<T> first) {
+        //    up = first;
+        //}
         public T Dequeue()
         {
             T res = up.contain;

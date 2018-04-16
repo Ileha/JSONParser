@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B4FB547A-9F23-457F-9066-6C39D7C37401}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JSONParserLibrary</RootNamespace>
     <AssemblyName>JSONParserLibrary</AssemblyName>
@@ -58,6 +58,9 @@
     <Compile Include="Reactors\FigureOpen.cs" />
     <Compile Include="Reactors\Quotes.cs" />
     <Compile Include="Reactors\ReactorData.cs" />
+    <Compile Include="MainClass.cs" />
+    <Compile Include="Reactors\SquareOpen.cs" />
+    <Compile Include="Reactors\SquareClose.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

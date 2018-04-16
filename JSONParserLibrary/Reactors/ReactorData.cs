@@ -40,9 +40,11 @@ namespace JSONParserLibrary.Reactors
     public class ReactorData {
         public string data;
         public readonly Stack<AbstractReactor> Order;
+		public readonly Stack<AbstractReactor> ReverseOrder;
         public IPart root;
         public ReactorData(string data) {
             Order = new Stack<AbstractReactor>();
+			ReverseOrder = new Stack<AbstractReactor>();
 			root = new RootPart();
             this.data = data;
         }

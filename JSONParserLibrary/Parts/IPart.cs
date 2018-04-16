@@ -9,7 +9,16 @@ namespace JSONParserLibrary
 		public virtual string name
 		{
 			get { return _name; }
-			set { _name = value; }
+			set { 
+				try {
+					parent.RemovePart(name);
+					_name = value;
+					parent.AddPart(this);
+				}
+				catch (Exception err) {
+					_name = value;
+				}
+			}
 		}
 		public virtual IPart parent
 		{

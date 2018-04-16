@@ -3,22 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JSONParserLibrary.Exceptions;
 
 namespace JSONParserLibrary.Reactors
 {
-    public class Colon : AbstractReactor
-    {
-        private int _index;
+	public class ColonFabric : AbstractReactorFabric {
+		public override string Name {
+			get {
+				return ":";
+			}
+		}
 
-        public Colon() : base(":") {}
-        public override int index
-        {
-            get { return _index; }
-        }
+		public override AbstractReactor CreateInstanse(int index) {
+			return new Colon(index);
+		}
+	}
 
-        public override void CreateInstanse(int index, ReactorData data)
-        {
-            data.Order.Push(new Colon() { _index = index });
+    public class Colon : AbstractReactor {
+        public Colon(int index) : base(":", index) {}
+
+		public override OpenClose State {
+			get {
+				return OpenClose.undefined;
+			}
+			set {
+				throw new NotImplementedException();
+			}
+		}
+
+        public override void Work(ReactorData data) {
+			//data.Order.Push(this);
         }
     }
 }
