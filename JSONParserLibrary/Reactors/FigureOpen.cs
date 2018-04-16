@@ -60,8 +60,12 @@ namespace JSONParserLibrary.Reactors {
 			{
 				AbstractReactor[] indexes = new AbstractReactor[4];
 				indexes[0] = data.Order.Pop();
+                if (indexes[0].React == "}") { break; }
+                if (indexes[0].React != "\"") { throw new ParsError("\""); }
 				indexes[1] = data.Order.Pop();
+                if (indexes[1].React != "\"") { throw new ParsError("\""); }
 				indexes[2] = data.Order.Pop();
+                if (indexes[2].React != ":") { throw new ParsError(":"); }
 				indexes[3] = data.Order.Pop();
 
 				if (indexes[3].React == "{")
@@ -83,7 +87,11 @@ namespace JSONParserLibrary.Reactors {
 				else if (indexes[3].React == "\"")
 				{
 					indexes[2] = indexes[3];
-					while ((indexes[3] = data.Order.Pop()).React != "\"") { }
+                    AbstractReactor vie = null;
+                    do {
+                        indexes[3] = data.Order.Pop();
+                        vie = data.Order.Peek();
+                    } while (!(indexes[3].React == "\"" && (vie.React == "," || vie.React == "}")));
 					data.root.AddPart(new PartString(data.data.Substring(indexes[0].index + 1, (indexes[1].index - indexes[0].index) - 1), data.data.Substring(indexes[2].index + 1, (indexes[3].index - indexes[2].index) - 1)));
 					last = data.Order.Pop();
 				}

@@ -42,7 +42,7 @@ namespace JSONParserLibrary {
 				data.root = p;
 			}
 
-			AbstractReactor last = null;
+			AbstractReactor last = this;
 			do
 			{
 				AbstractReactor[] indexes = new AbstractReactor[2];
@@ -57,12 +57,17 @@ namespace JSONParserLibrary {
 					last = data.Order.Pop();
 				}
 				else if (indexes[0].React == "\"") {
-					while ((indexes[1] = data.Order.Pop()).React != "\"") { }
+                    AbstractReactor vie = null;
+                    do
+                    {
+                        indexes[1] = data.Order.Pop();
+                        vie = data.Order.Peek();
+                    } while (!(indexes[1].React == "\"" && (vie.React == "," || vie.React == "]")));
 					data.root.AddPart(new PartString(data.root.Count.ToString(), data.data.Substring(indexes[0].index + 1, (indexes[1].index - indexes[0].index) - 1)));
 					last = data.Order.Pop();
 				}
 				else {
-					data.root.AddPart(new PartNotString(data.root.Count.ToString(), data.data.Substring(last.index + 1, (indexes[1].index - last.index) - 1).Trim()));
+					data.root.AddPart(new PartNotString(data.root.Count.ToString(), data.data.Substring(last.index + 1, (indexes[0].index - last.index) - 1).Trim()));
 					last = indexes[0];
 				}
 			} while (last.React != "]");
