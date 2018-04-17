@@ -21,15 +21,6 @@ namespace JSONParserLibrary.Reactors {
     public class FigureOpen : AbstractReactor {
         public FigureOpen(int index) : base("{", index) {}
 
-		public override OpenClose State {
-			get {
-				return OpenClose.open;
-			}
-			set {
-				throw new NotImplementedException();
-			}
-		}
-
         public override void Work(ReactorData data) {
 			if (data.root.parent == null) {
 				PartStruct p = new PartStruct("root");

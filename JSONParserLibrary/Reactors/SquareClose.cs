@@ -21,13 +21,6 @@ namespace JSONParserLibrary
 			
 		}
 
-		public override void Work(ReactorData data) {
-			//AbstractReactor r = data.Order.Peek();
-			//if (r.React != "[") {
-			//	AbstractReactor react = new Comma(index);
-			//	react.Work(data);
-			//}
-			//data.root = data.root.parent;
-		}
+		public override void Work(ReactorData data) {}
 	}
 }
