@@ -37,6 +37,9 @@ namespace JSONParserLibrary
 		public override string ToJSON() {
 			return string.Format("\"{0}\": {1}", name, ValueToJSON());
 		}
+        public override IEnumerator<IPart> GetEnumerator() {
+            return container.Values.GetEnumerator();
+        }
 
 		public override string ValueToJSON() {
 			StringBuilder res = new StringBuilder().Append("{");

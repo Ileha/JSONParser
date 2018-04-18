@@ -35,6 +35,10 @@ namespace JSONParserLibrary {
 			return string.Format("\"{0}\": {1}", name, ValueToJSON());
 		}
 
+        public override IEnumerator<IPart> GetEnumerator() {
+            return container.GetEnumerator();
+        }
+
 		public override string ValueToJSON() {
             StringBuilder res = new StringBuilder().Append("[");
 			for (int i = 0; i<container.Count; i++) {

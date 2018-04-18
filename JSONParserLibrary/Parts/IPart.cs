@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace JSONParserLibrary
 {
-	public abstract class IPart : IToJSON
+	public abstract class IPart : IToJSON, IEnumerable<IPart>
 	{
 		protected string _name;
 		protected IPart _parent;
@@ -40,5 +43,14 @@ namespace JSONParserLibrary
 		public abstract string ValueToJSON();
 
 		//IPart this[string index];
-	}
+
+        public virtual IEnumerator<IPart> GetEnumerator() {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
 }
