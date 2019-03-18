@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JSONParserLibrary.Reactors
 {
@@ -16,7 +12,7 @@ namespace JSONParserLibrary.Reactors
     public abstract class AbstractReactor {
 		private int _index;
         private string _react;
-        public string React { get { return _react; } }
+        public string React { get { return _react; } } 
 		public int index { get { return _index; } }
 
         public AbstractReactor(string react_word, int _index) {

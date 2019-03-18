@@ -12,44 +12,35 @@ namespace JSONParserLibrary
         public PartStruct() {
             container = new Dictionary<string, IPart>();
         }
-		public PartStruct(string name, params IPart[] contain) {
-			this.name = name;
-			container = new Dictionary<string, IPart>();
-			foreach (IPart part in contain) {
-				container.Add(part.name, part);
-				part.parent = this;
-			}
+
+		public override IPart Add(string name, IPart element)
+		{
+			container.Add(name, element);
+            return this;
 		}
 
-		public override void AddPart(IPart element) {
-			container.Add(element.name, element);
-			element.parent = this;
-		}
-
-		public override IPart GetPart(string name) {
+		public override IPart Get(string name) {
 			return container[name];
 		}
 
-		public override void RemovePart(string name) {
+		public override IPart Remove(string name) {
 			container.Remove(name);
+            return this;
 		}
 
-		public override string ToJSON() {
-			return string.Format("\"{0}\": {1}", name, ValueToJSON());
-		}
         public override IEnumerator<IPart> GetEnumerator() {
             return container.Values.GetEnumerator();
         }
 
-		public override string ValueToJSON() {
+		public override string ToJSON() {
 			StringBuilder res = new StringBuilder().Append("{");
 			int i = 0;
-			foreach (IPart part in container.Values) {
+			foreach (KeyValuePair<string, IPart> part in container) {
 				if (i == container.Count - 1) {
-					res.Append(part.ToJSON());
+					res.AppendFormat("\"{0}\":{1}", part.Key, part.Value.ToJSON());
 				}
 				else {
-					res.Append(part.ToJSON()).Append(", ");
+					res.AppendFormat("\"{0}\":{1}, ", part.Key, part.Value.ToJSON());
 				}
 				i++;
 			}

@@ -17,6 +17,9 @@ namespace JSONParserLibrary
         }
 
         private static Dictionary<string, AbstractReactorFabric> library;
+		private static void addToLibrary(AbstractReactorFabric react) {
+			library.Add(react.Name, react);
+		}
         static JSONParser() {
             library = new Dictionary<string, AbstractReactorFabric>();
 			addToLibrary(new FigureCloseFabric());
@@ -30,35 +33,31 @@ namespace JSONParserLibrary
             type_struct = typeof(PartStruct);
         }
 
-        public JSONParser() { }
+        public JSONParser() {
+			main = new PartStruct();
+		}
+        public JSONParser(IPart data) {
+            main = data;
+        }
         public JSONParser(string json_string)
         {
-            Create(json_string);
-        }
-
-		private static void addToLibrary(AbstractReactorFabric react) {
-			library.Add(react.Name, react);
-		}
-
-        public void Create(string json_string) {
             Convert(out main, json_string);
         }
 
-		public static void Convert(out IPart name, string For_parse) {
+		private static void Convert(out IPart name, string For_parse) {
             ReactorData data = new ReactorData(For_parse);
-            for (int i = For_parse.Length-1; i >= 0; i--) {
+            for (int i = 0; i < For_parse.Length; i++) {
 				try {
-					data.Order.Push(library[For_parse[i].ToString()].CreateInstanse(i));
-					//Console.WriteLine(i);
+					data.Order.Enqueue(library[For_parse[i].ToString()].CreateInstanse(i));
 				}
 				catch (Exception err) { }
             }
 
 			while (data.Order.Count != 0) {
-				data.Order.Pop().Work(data);
+				data.Order.Dequeue().Work(data);
 			}
 
-			name = data.root.GetPart();
+			name = data.root;
         }
 
         public IPart this[string index]
@@ -74,11 +73,11 @@ namespace JSONParserLibrary
                     {
                         if (res.GetType() == type_array)
                         {
-                            res = res.GetPart(System.Convert.ToInt32(elements[i]));
+                            res = res.Get(System.Convert.ToInt32(elements[i]));
                         }
                         else if (res.GetType() == type_struct)
                         {
-                            res = res.GetPart(elements[i]);
+                            res = res.Get(elements[i]);
                         }
                         else
                         {
@@ -99,11 +98,7 @@ namespace JSONParserLibrary
         }
 
         public string ToJSON() {
-            return main.ValueToJSON();
-        }
-
-        public string ValueToJSON() {
-            throw new NotImplementedException();
+			return main.ToJSON();
         }
     }
 }

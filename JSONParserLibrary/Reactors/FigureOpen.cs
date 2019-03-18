@@ -22,6 +22,60 @@ namespace JSONParserLibrary.Reactors {
         public FigureOpen(int index) : base("{", index) {}
 
         public override void Work(ReactorData data) {
+			IPart JSONStruct = new PartStruct();
+			data.Push(JSONStruct);
+			AbstractReactor r = null;
+
+			do {
+				r = data.Order.Dequeue();
+				int[] range = new int[3];
+				if (r.React != "\"") { throw new ParsError("\""); }
+				range[0] = r.index;
+				r = data.Order.Dequeue();
+				if (r.React != "\"") { throw new ParsError("\""); }
+				range[1] = r.index;
+				r = data.Order.Dequeue();
+				range[2] = r.index;
+				if (r.React != ":") { throw new ParsError("\""); }
+				string name = data.JSONData.Substring(range[0] + 1, range[1] - range[0]-1);
+
+				r = data.Order.Dequeue();
+				if (r.React == "\"")
+				{ //string
+					range[0] = r.index;
+					do
+					{
+						r = data.Order.Dequeue();
+					} while (r.React != "\"");
+					range[1] = r.index;
+					JSONStruct.Add(name, PartValue.GetString(data.JSONData.Substring(range[0] + 1, range[1] - range[0]-1)));
+					r = data.Order.Dequeue();
+				}
+				else if (r.React == "," || r.React == "}")
+				{ //not string
+					range[0] = r.index;
+					JSONStruct.Add(name, PartValue.GetNotString(data.JSONData.Substring(range[2] + 1, range[0] - range[2]-1).Trim()));
+				}
+				else if (r.React == "{")
+				{ //object
+					r.Work(data);
+					JSONStruct.Add(name, data.Pop());
+					r = data.Order.Dequeue();
+				}
+				else if (r.React == "[")
+				{ //array
+					r.Work(data);
+					JSONStruct.Add(name, data.Pop());
+					r = data.Order.Dequeue();
+				}
+				else
+				{
+					throw new ParsError("error in struct");
+				}
+			} while (r.React != "}");
+
+
+			/*
 			if (data.root.parent == null) {
 				PartStruct p = new PartStruct("root");
 				data.root.AddPart(p);
@@ -92,6 +146,7 @@ namespace JSONParserLibrary.Reactors {
 				}
 			} while (last.React != "}");
 			data.root = data.root.parent;
+			*/
         }
     }
 }
