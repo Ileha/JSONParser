@@ -1,52 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JSONParserLibrary;
+﻿using System.Collections.Generic;
 
 namespace JSONParserLibrary.Reactors
 {
-	class RootPart : IPart {
-		private IPart container;
-
-		public override IPart parent {
-			get { return null; }
-			set { }
-		}
-
-		public override string name {
-			get { return "root"; }
-			set { }
-		}
-
-		public override void AddPart(IPart element) {
-			container = element;
-			element.parent = this;
-		}
-		public override IPart GetPart() {
-			return container;
-		}
-
-		public override string ToJSON() {
-			throw new NotImplementedException();
-		}
-
-		public override string ValueToJSON() {
-			throw new NotImplementedException();
-		}
-	}
-
     public class ReactorData {
-        public string data;
-        public readonly Stack<AbstractReactor> Order;
-		public readonly Stack<AbstractReactor> ReverseOrder;
-        public IPart root;
-        public ReactorData(string data) {
-            Order = new Stack<AbstractReactor>();
-			ReverseOrder = new Stack<AbstractReactor>();
-			root = new RootPart();
-            this.data = data;
+        public readonly Queue<AbstractReactor> Order;
+		private readonly Stack<IPart> Current;
+		public IPart root { get; private set; }
+		public string JSONData { get; private set; }
+
+		/*
+			Push: добавляет элемент в стек на первое место
+			Pop: извлекает и возвращает первый элемент из стека
+			Peek: просто возвращает первый элемент из стека без его удаления
+		*/
+
+        public ReactorData(string JSONObject) {
+            Order = new Queue<AbstractReactor>();
+			Current = new Stack<IPart>();
+			JSONData = JSONObject;
         }
+
+		public bool IsEmpty() {
+			return root == null;
+		}
+		public void Push(IPart element) {
+			if (root == null) {
+				root = element;
+			}
+			Current.Push(element);
+		}
+		public IPart Pop() {
+			return Current.Pop();
+		}
+		public IPart Peek() {
+			return Current.Peek();
+		}
     }
 }

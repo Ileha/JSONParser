@@ -18,60 +18,40 @@ namespace JSONParserLibrary {
 		}
 
 		public override void Work(ReactorData data) {
-			if (data.root.parent == null) {
-				PartArray p = new PartArray("root");
-				data.root.AddPart(p);
-				data.root = p;
-			}
-			else if (data.ReverseOrder.Count > 0) {
-				AbstractReactor r = data.ReverseOrder.Pop();
-				if (r.React != ":") { throw new ParsError(":"); }
-				r = data.ReverseOrder.Pop();
-				if (r.React != "\"") { throw new ParsError("\""); }
-				int stop = r.index;
-				r = data.ReverseOrder.Pop();
-				if (r.React != "\"") { throw new ParsError("\""); }
-				int start = r.index;
-				PartArray p = new PartArray(data.data.Substring(start + 1, (stop - start) - 1));
-				data.root.AddPart(p);
-				data.root = p;
-			}
-			else {
-				PartArray p = new PartArray(data.root.Count.ToString());
-				data.root.AddPart(p);
-				data.root = p;
-			}
+			IPart JSONArray = new PartArray();
+			data.Push(JSONArray);
 
 			AbstractReactor last = this;
 			do
 			{
 				AbstractReactor[] indexes = new AbstractReactor[2];
-				indexes[0] = data.Order.Pop();
+				indexes[0] = data.Order.Dequeue();
 
 				if (indexes[0].React == "{") {
 					indexes[0].Work(data);
-					last = data.Order.Pop();
+					JSONArray.Add(data.Pop());
+					last = data.Order.Dequeue();
 				}
 				else if (indexes[0].React == "[") {
 					indexes[0].Work(data);
-					last = data.Order.Pop();
+					JSONArray.Add(data.Pop());
+					last = data.Order.Dequeue();
 				}
 				else if (indexes[0].React == "\"") {
                     AbstractReactor vie = null;
                     do
                     {
-                        indexes[1] = data.Order.Pop();
+                        indexes[1] = data.Order.Dequeue();
                         vie = data.Order.Peek();
                     } while (!(indexes[1].React == "\"" && (vie.React == "," || vie.React == "]")));
-					data.root.AddPart(new PartString(data.root.Count.ToString(), data.data.Substring(indexes[0].index + 1, (indexes[1].index - indexes[0].index) - 1)));
-					last = data.Order.Pop();
+					JSONArray.Add(PartValue.GetString(data.JSONData.Substring(indexes[0].index + 1, (indexes[1].index - indexes[0].index) - 1)));
+					last = data.Order.Dequeue();
 				}
 				else {
-					data.root.AddPart(new PartNotString(data.root.Count.ToString(), data.data.Substring(last.index + 1, (indexes[0].index - last.index) - 1).Trim()));
+					JSONArray.Add(PartValue.GetNotString(data.JSONData.Substring(last.index + 1, (indexes[0].index - last.index) - 1).Trim()));
 					last = indexes[0];
 				}
 			} while (last.React != "]");
-			data.root = data.root.parent;
 		}
 	}
 }

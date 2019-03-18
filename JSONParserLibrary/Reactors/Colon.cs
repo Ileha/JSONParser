@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JSONParserLibrary.Exceptions;
-
-namespace JSONParserLibrary.Reactors
+﻿namespace JSONParserLibrary.Reactors
 {
 	public class ColonFabric : AbstractReactorFabric {
 		public override string Name {

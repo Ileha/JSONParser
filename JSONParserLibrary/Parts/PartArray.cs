@@ -6,48 +6,38 @@ namespace JSONParserLibrary {
 	public class PartArray : IPart {
 		private List<IPart> container;
 
-		public PartArray(string name, params IPart[] contain) {
-            this.name = name;
+		public PartArray() {
 			container = new List<IPart>();
-			for (int i = 0; i < contain.Length; i++) {
-				contain[i].name = i.ToString();
-				container.Add(contain[i]);
-				contain[i].parent = this;
-			}
 		}
 		public override int Count { get { return container.Count; } }
 
-		public override void AddPart(IPart element) {
-			element.name = container.Count.ToString();
+		public override IPart Add(IPart element) {
 			container.Add(element);
-			element.parent = this;
+            return this;
 		}
 
-		public override IPart GetPart(int index) {
+		public override IPart Get(int index) {
 			return container[index];
 		}
 
-		public override void RemovePart(int index) {
+		public override IPart Remove(int index) {
 			container.RemoveAt(index);
-		}
-
-		public override string ToJSON() {
-			return string.Format("\"{0}\": {1}", name, ValueToJSON());
+            return this;
 		}
 
         public override IEnumerator<IPart> GetEnumerator() {
             return container.GetEnumerator();
         }
 
-		public override string ValueToJSON() {
+		public override string ToJSON() {
             StringBuilder res = new StringBuilder().Append("[");
 			for (int i = 0; i<container.Count; i++) {
 				if (i == container.Count - 1) {
-					res.Append(container[i].ValueToJSON());
+					res.Append(container[i].ToJSON());
 				}
 				else
 				{
-					res.Append(container[i].ValueToJSON()).Append(", ");
+					res.Append(container[i].ToJSON()).Append(", ");
 				}
 			}
             return res.Append("]").ToString();
