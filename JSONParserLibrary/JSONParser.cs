@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JSONParserLibrary.Reactors;
 using JSONParserLibrary.Exceptions;
+using System.IO;
 
 namespace JSONParserLibrary
 {
@@ -43,6 +44,19 @@ namespace JSONParserLibrary
         {
             Convert(out main, json_string);
         }
+
+		public static JSONParser ReadConfig(string configName) {
+			JSONParser res;
+			try {
+				using (StreamReader sr = new StreamReader(configName)) {
+					res = new JSONParser(sr.ReadToEnd());
+				}
+			}
+			catch (IOException e) {
+				throw e;
+			}
+			return res;
+		}
 
 		private static void Convert(out IPart name, string For_parse) {
             ReactorData data = new ReactorData(For_parse);
