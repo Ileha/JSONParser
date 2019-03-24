@@ -32,6 +32,10 @@ namespace JSONParserLibrary {
 					JSONArray.Add(data.Pop());
 					last = data.Order.Dequeue();
 				}
+                else if (indexes[0].React == "]")
+                {
+                    break;
+                }
 				else if (indexes[0].React == "[") {
 					indexes[0].Work(data);
 					JSONArray.Add(data.Pop());

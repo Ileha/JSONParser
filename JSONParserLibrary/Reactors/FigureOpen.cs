@@ -29,7 +29,10 @@ namespace JSONParserLibrary.Reactors {
 			do {
 				r = data.Order.Dequeue();
 				int[] range = new int[3];
-				if (r.React != "\"") { throw new ParsError("\""); }
+				if (r.React != "\"") {
+                    if (r.React == "}") { break; }
+                    throw new ParsError("\"");
+                }
 				range[0] = r.index;
 				r = data.Order.Dequeue();
 				if (r.React != "\"") { throw new ParsError("\""); }

@@ -24,7 +24,7 @@ string for_parse = "{\"firstName\": \"Иван\",\"lastName\": \"Иванов\",
 *parsing*
 ```cs
 JSONParser pars = new JSONParser(for_parse);
-Console.WriteLine(pars["phoneNumbers.1"].Value.value);
+Console.WriteLine(pars["phoneNumbers.1"].value);
 Console.WriteLine(pars.Data.Get("address").Get("postalCode").value);
 /*
 output:
