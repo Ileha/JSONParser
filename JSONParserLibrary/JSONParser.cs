@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using JSONParserLibrary.Reactors;
-using JSONParserLibrary.Exceptions;
 using System.IO;
 
 namespace JSONParserLibrary
 {
 	public class JSONParser : IToJSON
     {
-        private static Type type_array;
-        private static Type type_struct;
-
         private IPart main;
 
         public IPart Data {
@@ -30,8 +26,6 @@ namespace JSONParserLibrary
 			addToLibrary(new QuotesFabric());
 			addToLibrary(new SquareOpenFabric());
 			addToLibrary(new SquareCloseFabric());
-            type_array = typeof(PartArray);
-            type_struct = typeof(PartStruct);
         }
 
         public JSONParser() {
@@ -74,40 +68,9 @@ namespace JSONParserLibrary
 			name = data.root;
         }
 
-        public IPart this[string index]
-        {
-            get
-            {
-                string[] elements = index.Split('.');
-                IPart res = main;
-                for (int i = 0; i < elements.Length; i++)
-                {
-                    //Console.WriteLine("element: {0} - ", elements[i]);
-                    try
-                    {
-                        if (res.GetType() == type_array)
-                        {
-                            res = res.Get(System.Convert.ToInt32(elements[i]));
-                        }
-                        else if (res.GetType() == type_struct)
-                        {
-                            res = res.Get(elements[i]);
-                        }
-                        else
-                        {
-                            throw new FielNotFound(elements[i]); ;
-                        }
-                    }
-                    catch (FielNotFound err2)
-                    {
-                        throw err2;
-                    }
-                    catch (Exception err)
-                    {
-                        throw new FielNotFound(elements[i]);
-                    }
-                }
-                return res;
+        public IPart this[string index] {
+            get {
+				return main.ByPath(index);
             }
         }
 

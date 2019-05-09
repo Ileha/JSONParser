@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using JSONParserLibrary.Exceptions;
 
 namespace JSONParserLibrary
 {
@@ -45,6 +45,19 @@ namespace JSONParserLibrary
 				i++;
 			}
 			return res.Append("}").ToString();
+		}
+
+		internal override IPart PathStack(Queue<string> path) {
+			if (path.Count == 0) {
+				return this;
+			}
+			string index = path.Dequeue();
+			try {
+				return Get(index).PathStack(path);
+			}
+			catch (KeyNotFoundException err) {
+				throw new FielNotFound(index);
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using JSONParserLibrary.Exceptions;
+using System.Collections.Generic;
 
 namespace JSONParserLibrary
 {
@@ -17,8 +18,7 @@ namespace JSONParserLibrary
         internal static PartValue GetString(string _value) {
             return new PartValue() { res = _value, isQuotes = true };
         }
-        internal static PartValue GetNotString(string _value)
-        {
+        internal static PartValue GetNotString(string _value) {
             return new PartValue() { res = _value, isQuotes = false };
         }
 		public override void SetValue(Object _value)
@@ -42,13 +42,21 @@ namespace JSONParserLibrary
 		}
 
 		public override string ToJSON() {
-			if (isQuotes)
-			{
+			if (isQuotes) {
 				return String.Format("\"{0}\"", res);
 			}
 			else
 			{
 				return res;
+			}
+		}
+
+		internal override IPart PathStack(Queue<string> path) {
+			if (path.Count == 0) {
+				return this;
+			}
+			else {
+				throw new FielNotFound(path.Peek());
 			}
 		}
 	}

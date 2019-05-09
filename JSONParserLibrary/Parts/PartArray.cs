@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using JSONParserLibrary.Exceptions;
 
 namespace JSONParserLibrary {
 	public class PartArray : IPart {
@@ -35,12 +36,24 @@ namespace JSONParserLibrary {
 				if (i == container.Count - 1) {
 					res.Append(container[i].ToJSON());
 				}
-				else
-				{
+				else {
 					res.Append(container[i].ToJSON()).Append(", ");
 				}
 			}
             return res.Append("]").ToString();
+		}
+
+		internal override IPart PathStack(Queue<string> path) {
+			if (path.Count == 0) {
+				return this;
+			}
+			int index = Int32.Parse(path.Dequeue());
+			try {
+				return Get(index).PathStack(path);
+			}
+			catch (IndexOutOfRangeException err) {
+				throw new FielNotFound(index.ToString());
+			}
 		}
 	}
 }
