@@ -7,7 +7,7 @@ namespace JSONParserLibrary
 {
 	public abstract class IPart : IToJSON, IEnumerable<IPart>
 	{
-		public virtual string value { get { throw new NotImplementedException(); } }
+		public virtual T GetValue<T>() { throw new NotImplementedException(); }
 		public virtual void SetValue(object _value) { throw new NotImplementedException(); }
 
 		public virtual IPart Add(string name, IPart element) { throw new NotImplementedException(); }
