@@ -13,12 +13,12 @@ namespace JSONParserLibrary
             get { return main; }
         }
 
-        private static Dictionary<string, AbstractReactorFabric> library;
+        private static Dictionary<char, AbstractReactorFabric> library;
 		private static void addToLibrary(AbstractReactorFabric react) {
 			library.Add(react.Name, react);
 		}
         static JSONParser() {
-            library = new Dictionary<string, AbstractReactorFabric>();
+            library = new Dictionary<char, AbstractReactorFabric>();
 			addToLibrary(new FigureCloseFabric());
 			addToLibrary(new FigureOpenFabric());
 			addToLibrary(new ColonFabric());
@@ -55,10 +55,9 @@ namespace JSONParserLibrary
 		private static void Convert(out IPart name, string For_parse) {
             ReactorData data = new ReactorData(For_parse);
             for (int i = 0; i < For_parse.Length; i++) {
-				try {
-					data.Order.Enqueue(library[For_parse[i].ToString()].CreateInstanse(i));
-				}
-				catch (Exception err) { }
+                if (library.ContainsKey(For_parse[i])) {
+                    data.Order.Enqueue(library[For_parse[i]].CreateInstanse(i));
+                }
             }
 
 			while (data.Order.Count != 0) {

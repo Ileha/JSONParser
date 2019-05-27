@@ -24,12 +24,27 @@ string for_parse = "{\"firstName\": \"Иван\",\"lastName\": \"Иванов\",
 *parsing*
 ```cs
 JSONParser pars = new JSONParser(for_parse);
-Console.WriteLine(pars["phoneNumbers.1"].value);
-Console.WriteLine(pars.Data.Get("address").Get("postalCode").value);
+
+Console.WriteLine(pars["phoneNumbers.1"].GetValue<String>());
+Console.WriteLine(pars.Data.Get("address").Get("postalCode").GetValue<int>());
+Console.WriteLine(pars.Data.ByPath("phoneNumbers.0").GetValue<String>());
+
+IPart streetAddress = null;
+Console.WriteLine(pars.Data.ByPathSave("address.streetAddress", out streetAddress));
+Console.WriteLine(streetAddress.GetValue<string>());
+
+IPart firstName = null;
+Console.WriteLine(pars.Data.ByPathSave("name.firstName", out streetAddress));//wrong request
+Console.WriteLine(firstName == null);
 /*
 output:
 916 123-4567
 101101
+812 123-1234
+True
+Московское ш., 101, кв.101
+False
+True
 */
 ```
 
@@ -74,11 +89,13 @@ if you use ```JSONParser``` or ```IPart``` you should invoke method ```ToJSON()`
 #### IPart
 Name                                   | Description                                                               |
 -------------------------------------- | ------------------------------------------------------------------------- |
-string value                           | Get value in string. Implemented in PartValue                             |
+T GetValue<T>()                        | Get value in T format. Implemented in PartValue                           |
 void SetValue(Object)                  | Set value. Implemented in PartValue                                       |
 void Add(IPart)/(string, IPart)        | Add IPart to itself. Implemented in PartStruct and PartArray              |
 void Add(Object)/(string, Object)      | Create IPart and add it to itself. Implemented in PartStruct and PartArray|
 void Remove(string)/(int)              | Remove Part by name or index. Implemented in PartStruct and PartArray     |
 IPart Get(string)(int)                 | Get IPart by name or index. Implemented in PartStruct and PartArray       |
+IPart ByPath(string)                   | Get IPart by path.
+IPart ByPathSave(string, out IPart)    | If contains get IPart by path and return true. Else return false.         |
 int Count                              | Get length of array. Implemented in PartArray                             |
 string ToJSON()                        | return its content in format key:value.                                   |

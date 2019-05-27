@@ -8,15 +8,18 @@ namespace JSONParserLibrary.Exceptions
 {
     class ParsError : Exception
     {
-        string bad;
-        public ParsError(string bad)
+        String message;
+        public ParsError(char bad)
         {
-            this.bad = bad;
+            message = "bad symbol " + bad;
+        }
+        public ParsError(string message) {
+            this.message = message;
         }
 
         public override string ToString()
         {
-            return "bad symbol " + bad;
+            return message;
         }
     }
 }

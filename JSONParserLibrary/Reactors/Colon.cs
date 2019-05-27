@@ -1,9 +1,9 @@
 ﻿namespace JSONParserLibrary.Reactors
 {
 	public class ColonFabric : AbstractReactorFabric {
-		public override string Name {
+		public override char Name {
 			get {
-				return ":";
+				return ':';
 			}
 		}
 
@@ -13,7 +13,7 @@
 	}
 
     public class Colon : AbstractReactor {
-        public Colon(int index) : base(":", index) {}
+        public Colon(int index) : base(':', index) {}
 
         public override void Work(ReactorData data) {}
     }

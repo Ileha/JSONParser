@@ -5,9 +5,9 @@ namespace JSONParserLibrary
 {
 	public class SquareCloseFabric : AbstractReactorFabric
 	{
-		public override string Name
+        public override char Name
 		{
-			get { return "]"; }
+			get { return ']'; }
 		}
 
 		public override AbstractReactor CreateInstanse(int index)
@@ -17,7 +17,7 @@ namespace JSONParserLibrary
 	}
 
 	public class SquareClose : AbstractReactor {
-		public SquareClose(int index) : base("]", index) {
+		public SquareClose(int index) : base(']', index) {
 			
 		}
 

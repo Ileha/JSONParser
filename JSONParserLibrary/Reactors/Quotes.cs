@@ -8,9 +8,9 @@ namespace JSONParserLibrary.Reactors
 {
 	public class QuotesFabric : AbstractReactorFabric
 	{
-		public override string Name {
+		public override char Name {
 			get {
-				return "\"";
+				return '\"';
 			}
 		}
 
@@ -20,7 +20,7 @@ namespace JSONParserLibrary.Reactors
 	}
 
     public class Quotes : AbstractReactor {
-        public Quotes(int index) : base("\"", index) { }
+        public Quotes(int index) : base('\"', index) { }
 
         public override void Work(ReactorData data) {}
     }

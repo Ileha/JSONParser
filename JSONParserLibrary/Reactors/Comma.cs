@@ -7,9 +7,10 @@ using JSONParserLibrary.Exceptions;
 
 namespace JSONParserLibrary.Reactors {
 	public class CommaFabric : AbstractReactorFabric {
-		public override string Name {
+        public override char Name
+        {
 			get {
-				return ",";
+				return ',';
 			}
 		}
 
@@ -19,7 +20,7 @@ namespace JSONParserLibrary.Reactors {
 	}
 
     public class Comma : AbstractReactor {
-        public Comma(int index) : base(",", index) { }
+        public Comma(int index) : base(',', index) { }
 
         public override void Work(ReactorData data) {}
     }

@@ -7,9 +7,10 @@ using JSONParserLibrary.Exceptions;
 
 namespace JSONParserLibrary.Reactors {
 	public class FigureOpenFabric : AbstractReactorFabric {
-		public override string Name {
+        public override char Name
+        {
 			get {
-				return "{";
+				return '{';
 			}
 		}
 
@@ -19,7 +20,7 @@ namespace JSONParserLibrary.Reactors {
 	}
 
     public class FigureOpen : AbstractReactor {
-        public FigureOpen(int index) : base("{", index) {}
+        public FigureOpen(int index) : base('{', index) {}
 
         public override void Work(ReactorData data) {
 			IPart JSONStruct = new PartStruct();
@@ -29,43 +30,43 @@ namespace JSONParserLibrary.Reactors {
 			do {
 				r = data.Order.Dequeue();
 				int[] range = new int[3];
-				if (r.React != "\"") {
-                    if (r.React == "}") { break; }
-                    throw new ParsError("\"");
+				if (r.react != '\"') {
+                    if (r.react == '}') { break; }
+                    throw new ParsError('\"');
                 }
 				range[0] = r.index;
 				r = data.Order.Dequeue();
-				if (r.React != "\"") { throw new ParsError("\""); }
+				if (r.react != '\"') { throw new ParsError('\"'); }
 				range[1] = r.index;
 				r = data.Order.Dequeue();
 				range[2] = r.index;
-				if (r.React != ":") { throw new ParsError("\""); }
+				if (r.react != ':') { throw new ParsError('\"'); }
 				string name = data.JSONData.Substring(range[0] + 1, range[1] - range[0]-1);
 
 				r = data.Order.Dequeue();
-				if (r.React == "\"")
+				if (r.react == '\"')
 				{ //string
 					range[0] = r.index;
 					do
 					{
 						r = data.Order.Dequeue();
-					} while (r.React != "\"");
+					} while (r.react != '\"');
 					range[1] = r.index;
 					JSONStruct.Add(name, PartValue.GetString(data.JSONData.Substring(range[0] + 1, range[1] - range[0]-1)));
 					r = data.Order.Dequeue();
 				}
-				else if (r.React == "," || r.React == "}")
+				else if (r.react == ',' || r.react == '}')
 				{ //not string
 					range[0] = r.index;
 					JSONStruct.Add(name, PartValue.GetNotString(data.JSONData.Substring(range[2] + 1, range[0] - range[2]-1).Trim()));
 				}
-				else if (r.React == "{")
+				else if (r.react == '{')
 				{ //object
 					r.Work(data);
 					JSONStruct.Add(name, data.Pop());
 					r = data.Order.Dequeue();
 				}
-				else if (r.React == "[")
+				else if (r.react == '[')
 				{ //array
 					r.Work(data);
 					JSONStruct.Add(name, data.Pop());
@@ -75,7 +76,7 @@ namespace JSONParserLibrary.Reactors {
 				{
 					throw new ParsError("error in struct");
 				}
-			} while (r.React != "}");
+			} while (r.react != '}');
 
 
 			/*

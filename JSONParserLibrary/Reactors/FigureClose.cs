@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace JSONParserLibrary.Reactors {
 	public class FigureCloseFabric : AbstractReactorFabric {
-		public override string Name {
+		public override char Name {
 			get {
-				return "}";
+				return '}';
 			}
 		}
 
@@ -18,7 +18,7 @@ namespace JSONParserLibrary.Reactors {
 	}
 
 	public class FigureClose : AbstractReactor {
-        public FigureClose(int index) : base("}", index) { }
+        public FigureClose(int index) : base('}', index) { }
 
         public override void Work(ReactorData data) {}
     }
